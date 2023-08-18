@@ -1,14 +1,13 @@
 from flask import Flask, request
-from duckduckgo_search import ddg
+from duckduckgo_search import DDGS
 app = Flask(__name__)
 
 
 @app.route('/search')
 def search():  # put application's code here
     keywords = request.args.get('q')
-    print(request.args.get('max_results'))
-    max_results = int(request.args.get('max_results') or "3")
-    results = ddg(keywords, region='wt-wt', max_results=max_results)
+    with DDGS() as ddgs:
+        results = ddgs.text(keywords, backend='lite')
     print(results)
     return results
 
